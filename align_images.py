@@ -21,17 +21,19 @@ if __name__ == "__main__":
     Extracts and aligns all faces from images using DLib and a function from original FFHQ dataset preparation step
     python align_images.py /raw_images /aligned_images
     """
-
+    print("加载landmark预训练网络")
     landmarks_model_path = unpack_bz2(get_file('shape_predictor_68_face_landmarks.dat.bz2',
                                                LANDMARKS_MODEL_URL, cache_subdir='temp'))
     RAW_IMAGES_DIR = sys.argv[1]
     ALIGNED_IMAGES_DIR = sys.argv[2]
-
+    print(RAW_IMAGES_DIR + "-------" + ALIGNED_IMAGES_DIR)
     landmarks_detector = LandmarksDetector(landmarks_model_path)
     for img_name in os.listdir(RAW_IMAGES_DIR):
         raw_img_path = os.path.join(RAW_IMAGES_DIR, img_name)
+        print("正在处理...")
         for i, face_landmarks in enumerate(landmarks_detector.get_landmarks(raw_img_path), start=1):
+            # 注意图片的格式
             face_img_name = '%s_%02d.png' % (os.path.splitext(img_name)[0], i)
             aligned_face_path = os.path.join(ALIGNED_IMAGES_DIR, face_img_name)
-
+            print(aligned_face_path)
             image_align(raw_img_path, aligned_face_path, face_landmarks)
