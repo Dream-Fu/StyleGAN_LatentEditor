@@ -94,7 +94,7 @@ if a:
     param_dict = {key_translate(k) : weight_translate(k, v) for k,v in state_D.items() if key_translate(k) is not None}
     if a:
         sd_shapes = {k : v.shape for k,v in d_basic.state_dict().items()}
-        param_shapes = {k : v.shape for k,v in param_dict.items() }
+        param_shapes = {k : v.shape for k,v in param_dict.items()}
 
         for k in list(sd_shapes)+list(param_shapes):
             pds = param_shapes.get(k)

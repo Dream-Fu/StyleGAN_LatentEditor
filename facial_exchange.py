@@ -66,7 +66,9 @@ def main():
      optimizer=optim.Adam({dlatent_a,dlatent_e},lr=0.01,betas=(0.9,0.999),eps=1e-8)
 
      alpha=torch.zeros((1,18,512)).to(device)
-     alpha[:,3:5,:]=1
+     # 使用4-7特征码改变面部
+     #alpha[:,3:5,:]=1
+     alpha[:, 4:8, :] = 1
 
      print("Start")
      loss_list=[]
@@ -81,18 +83,18 @@ def main():
           loss_1=caluclate_contentloss(synth_img_a,perceptual_net,img_p1,MSE_Loss,upsample2d)
           loss_1.backward()
 
-          optimizer.step()
+          # optimizer.step()
 
           loss_2=caluclate_styleloss(synth_img_e,img_p0,perceptual_net,upsample2d)
           loss_2.backward()
+
           optimizer.step()
 
           loss_1=loss_1.detach().cpu().numpy()
           loss_2=loss_2.detach().cpu().numpy()
 
 
-
-          dlatent1=dlatent_a*alpha+dlatent_e*(1-alpha)
+          dlatent1=dlatent_a*alpha+dlatent_e*(1-alpha) # 对潜向量做操作
           dlatent2=dlatent_a*(1-alpha)+dlatent_e*alpha
 
           synth_img1=g_synthesis(dlatent1)
